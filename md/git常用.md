@@ -30,9 +30,9 @@
 
 `git checkout -b devbranch origin/devbranch`
 
-如果已有本地分支则可以使用`git checkout devbranch`切换到本地分支，通过 git branch --set-upstream 命令设置关联
+如果已有本地分支则可以使用`git checkout devbranch`切换到本地分支，通过 git branch --set-upstream-to 命令设置关联
 
-`git branch --set-upstream develop origin/develop`
+`git branch --set-upstream-to develop origin/develop`
 
 ### 拉取远程分支
 
