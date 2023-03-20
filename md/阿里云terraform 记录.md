@@ -4,13 +4,13 @@
 > 
 > 1. 国内网络对terraform不友好，在第一步init就会hang住，直到超时，damn it。不过terraform是通过https请求官网，故可以搭建https proxy，在使用terraform前声明这个proxy即可
 > 
-> 2. 阿里云的[cloud shell]([Cloud Shell (aliyun.com)](https://shell.aliyun.com/)) 可以直接使用terraform，猜官方走了代理。但其存活时间只有1小时，到期自动销毁，如果要持久化，需要挂载nas，需另外付费
+> 2. 阿里云的[Cloud Shell (aliyun.com)](https://shell.aliyun.com/)  可以直接使用terraform，猜官方走了代理。但其存活时间只有1小时，到期自动销毁，如果要持久化，需要挂载nas，需另外付费
 > 
 > 3. 网上搜“terraform加速“基本上都是在第一次init请求官网后做本地缓存，并没有解决第一次init的加速问题
 > 
 > 4. 体验阿里云的ECS等资源创建需要账户余额大于等于100RMB，否则会提示"Message: code: 403, Your account does not have enough balance"
 > 
-> 5. 阿里云的modules本身存在缺陷，故如果自查实在查不到问题，可能要看阿里云的源码：[阿里云缺陷]([警告！不要使用任何阿里云官方提供的Terraform模块 - 知乎 (zhihu.com)](https://zhuanlan.zhihu.com/p/404400583))  
+> 5. 阿里云的modules本身存在缺陷，故如果自查实在查不到问题，可能要看阿里云的源码：[警告！不要使用任何阿里云官方提供的Terraform模块 - 知乎 (zhihu.com)](https://zhuanlan.zhihu.com/p/404400583) 
 
 本文涉及产品的版本：
 
@@ -18,13 +18,11 @@
  terraform -version
 Terraform v1.4.0
 on linux_amd64  
- 
+
  $home/.terraform.d/terraform-plugin-cache/registry.terraform.io/aliyun/alicloud/1.201.1/
 └── linux_amd64
     └── terraform-provider-alicloud_v1.201.1
 ```
-
-
 
 ## 1. 安装terraform
 
@@ -93,8 +91,6 @@ terraform {
 }
 ```
 
-
-
 ## 3. 调试demo的main.tf
 
 前提条件：阿里云账户大于等于100RMB，ram账户已配置，profile已配置（或用env引用）
@@ -118,28 +114,30 @@ terraform {
      cidr_block        = "172.16.0.0/21"
      availability_zone = "cn-beijing-b"
    }
-   
+   ```
    
    resource "alicloud_security_group" "default" {
      name = "default"
      vpc_id = "${alicloud_vpc.vpc.id}"
    }
    
-   
    resource "alicloud_instance" "instance" {
-     # cn-beijing
+   
+   # cn-beijing
+   
      availability_zone = "cn-beijing-b"
      security_groups = ["${alicloud_security_group.default.*.id}"]
    
-     # series III
+   # series III
+   
      instance_type        = "ecs.n2.small"
      system_disk_category = "cloud_efficiency"
      image_id             = "ubuntu_140405_64_40G_cloudinit_20161115.vhd"
      instance_name        = "test_foo"
      vswitch_id = "${alicloud_vswitch.vsw.id}"
      internet_max_bandwidth_out = 10
-   }
    
+   }
    
    resource "alicloud_security_group_rule" "allow_all_tcp" {
      type              = "ingress"
@@ -151,19 +149,20 @@ terraform {
      security_group_id = "${alicloud_security_group.default.id}"
      cidr_ip           = "0.0.0.0/0"
    }
-   ```
 
+```
 ## 4. 参考
 
 1. proxy配置
-   
-   ```
+```
+
    cat /etc/profile
    ***略
    export proxy="http://192.168.1.10:7890"
    export http_proxy=$proxy
    export https_proxy=$proxy
    export no_proxy="localhost,127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
-   ```
 
+```
 2. 
+```
