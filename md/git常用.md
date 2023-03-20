@@ -42,7 +42,11 @@
 
 ### 推送到远程分支
 
-使用命令`git push origin devbranch`推送分支到远程仓库
+1. 获取远程库与本地同步合并（如果远程库不为空必须做这一步，否则后面的提交会失败）
+
+`git pull --rebase origin devbranch`
+
+2. 使用命令`git push origin devbranch`推送分支到远程仓库
 
 ----
 
