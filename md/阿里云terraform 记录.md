@@ -114,55 +114,50 @@ terraform {
      cidr_block        = "172.16.0.0/21"
      availability_zone = "cn-beijing-b"
    }
-   ```
-   
    resource "alicloud_security_group" "default" {
-     name = "default"
-     vpc_id = "${alicloud_vpc.vpc.id}"
+    name = "default"
+    vpc_id = "${alicloud_vpc.vpc.id}"
    }
    
    resource "alicloud_instance" "instance" {
    
    # cn-beijing
    
-     availability_zone = "cn-beijing-b"
-     security_groups = ["${alicloud_security_group.default.*.id}"]
+   availability_zone = "cn-beijing-b"
+    security_groups = ["${alicloud_security_group.default.*.id}"]
    
    # series III
    
-     instance_type        = "ecs.n2.small"
-     system_disk_category = "cloud_efficiency"
-     image_id             = "ubuntu_140405_64_40G_cloudinit_20161115.vhd"
-     instance_name        = "test_foo"
-     vswitch_id = "${alicloud_vswitch.vsw.id}"
-     internet_max_bandwidth_out = 10
+   instance_type = "ecs.n2.small"
+    system_disk_category = "cloud_efficiency"
+    image_id = "ubuntu_140405_64_40G_cloudinit_20161115.vhd"
+    instance_name = "test_foo"
+    vswitch_id = "${alicloud_vswitch.vsw.id}"
+    internet_max_bandwidth_out = 10
    
    }
    
    resource "alicloud_security_group_rule" "allow_all_tcp" {
-     type              = "ingress"
-     ip_protocol       = "tcp"
-     nic_type          = "intranet"
-     policy            = "accept"
-     port_range        = "1/65535"
-     priority          = 1
-     security_group_id = "${alicloud_security_group.default.id}"
-     cidr_ip           = "0.0.0.0/0"
+    type = "ingress"
+    ip_protocol = "tcp"
+    nic_type = "intranet"
+    policy = "accept"
+    port_range = "1/65535"
+    priority = 1
+    security_group_id = "${alicloud_security_group.default.id}"
+    cidr_ip = "0.0.0.0/0"
    }
+   ```
 
-```
 ## 4. 参考
 
 1. proxy配置
-```
-
-   cat /etc/profile
-   ***略
-   export proxy="http://192.168.1.10:7890"
-   export http_proxy=$proxy
-   export https_proxy=$proxy
-   export no_proxy="localhost,127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
 
 ```
-2. 
+cat /etc/profile
+ ***略
+ export proxy="http://192.168.1.10:7890"
+ export http_proxy=$proxy
+ export https_proxy=$proxy
+ export no_proxy="localhost,127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
 ```
