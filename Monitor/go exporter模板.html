@@ -4,7 +4,7 @@
     <head>
         <meta charset="UTF-8">
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <title>自建derp中继遇到的坑 · GitBook</title>
+        <title>go exporter模板 · GitBook</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="description" content="">
         <meta name="generator" content="GitBook 3.2.3">
@@ -56,6 +56,8 @@
     <link rel="apple-touch-icon-precomposed" sizes="152x152" href="../gitbook/images/apple-touch-icon-precomposed-152.png">
     <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
 
+    
+    <link rel="next" href="../readme.md" />
     
     
     <link rel="prev" href="../readme.md" />
@@ -219,9 +221,9 @@
             <ul class="articles">
                 
     
-        <li class="chapter " data-level="3.1.1.1" data-path="../Monitor/go exporter模板.html">
+        <li class="chapter active" data-level="3.1.1.1" data-path="go exporter模板.html">
             
-                <a href="../Monitor/go exporter模板.html">
+                <a href="go exporter模板.html">
             
                     
                     go exporter模板
@@ -392,9 +394,9 @@
             <ul class="articles">
                 
     
-        <li class="chapter active" data-level="5.1.1" data-path="自建derp中继遇到的坑.html">
+        <li class="chapter " data-level="5.1.1" data-path="../Net/自建derp中继遇到的坑.html">
             
-                <a href="自建derp中继遇到的坑.html">
+                <a href="../Net/自建derp中继遇到的坑.html">
             
                     
                     自建derp中继遇到的坑
@@ -440,7 +442,7 @@
     <!-- Title -->
     <h1>
         <i class="fa fa-circle-o-notch fa-spin"></i>
-        <a href=".." >自建derp中继遇到的坑</a>
+        <a href=".." >go exporter模板</a>
     </h1>
 </div>
 
@@ -455,48 +457,202 @@
     
                                 <section class="normal markdown-section">
                                 
-                                <h1 id="&#x81EA;&#x5EFA;derp&#x4E2D;&#x7EE7;&#x9047;&#x5230;&#x7684;&#x5751;">&#x81EA;&#x5EFA;derp&#x4E2D;&#x7EE7;&#x9047;&#x5230;&#x7684;&#x5751;</h1>
-<p>  Google&#x641C;&#x7D22;&#x201C;derp&#x81EA;&#x5EFA;&#x201D;&#xFF0C;&#x6392;&#x540D;&#x9760;&#x524D;&#x7684;&#x4E00;&#x822C;&#x90FD;&#x662F;docker&#x955C;&#x50CF;&#x90E8;&#x7F72;&#xFF0C;&#x4E0D;&#x8FC7;<a href="https://tailscale.com/kb/1118/custom-derp-servers/" target="_blank">&#x5B98;&#x7F51;</a> &#x662F;&#x901A;&#x8FC7;go&#x76F4;&#x63A5;&#x4E8C;&#x8FDB;&#x5236;&#x90E8;&#x7F72;&#x3002;derp&#x670D;&#x52A1;&#x9996;&#x9009;&#x662F;&#x57DF;&#x540D;&#x6A21;&#x5F0F;&#xFF0C;ip&#x6A21;&#x5F0F;&#x672A;&#x5C1D;&#x8BD5;&#x3002;</p>
-<p>  derp&#x670D;&#x52A1;&#x6D89;&#x53CA;TCP(80/443)&#x548C;UDP&#x534F;&#x8BAE;(3478)&#xFF0C;&#x6240;&#x8C13;&#x7684;&#x5751;&#x4E3B;&#x8981;&#x6765;&#x81EA;&#x8FD9;&#x4E2A;&#x534F;&#x8BAE;&#x95EE;&#x9898;&#x3002;</p>
-<h2 id="tcp&#x534F;&#x8BAE;&#x7684;&#x5751;">TCP&#x534F;&#x8BAE;&#x7684;&#x5751;</h2>
-<p>  &#x901A;&#x5E38;&#x4E0D;&#x4F1A;&#x4F7F;&#x7528;80&#x7AEF;&#x53E3;&#xFF0C;&#x6545;&#x7565;&#x3002;&#x5982;&#x679C;&#x4F7F;&#x7528;443&#x7AEF;&#x53E3;&#xFF0C;&#x5219;&#x670D;&#x52A1;&#x9ED8;&#x8BA4;&#x901A;&#x8FC7;let&apos;s encrypt&#x83B7;&#x53D6;ssl&#x8BC1;&#x4E66;&#xFF0C;&#x6545;&#x4E0D;&#x9700;&#x624B;&#x52A8;&#x6307;&#x5B9A;cert&#x3002;443&#x53EF;&#x80FD;&#x51FA;&#x73B0;&#x7684;&#x95EE;&#x9898;&#xFF1A;1.&#x7AEF;&#x53E3;&#x51B2;&#x7A81;&#xFF0C;&#x672C;&#x5730;&#x5176;&#x4ED6;web&#x670D;&#x52A1;&#x5DF2;&#x4F7F;&#x7528;443&#xFF0C;&#x9700;&#x8981;&#x4EE3;&#x7406;&#x7B49;&#x89E3;&#x51B3;&#xFF1B;2.&#x56FD;&#x5185;443&#x7AEF;&#x53E3;&#x9700;&#x8981;&#x5907;&#x6848;&#x3002;&#x5982;&#x679C;&#x4E0D;&#x4F7F;&#x7528;443&#x7AEF;&#x53E3;&#xFF0C;&#x91C7;&#x7528;&#x81EA;&#x5B9A;&#x4E49;&#x7AEF;&#x53E3;&#x5982;5443&#xFF0C;&#x9700;&#x8981;&#x624B;&#x52A8;&#x6307;&#x5B9A;cert&#x3002;</p>
-<p>  &#x4F46;&#x662F;&#xFF0C;&#x4E0D;&#x7BA1;&#x662F;&#x4E8C;&#x8FDB;&#x5236;&#x8FD8;&#x662F;docker&#x90E8;&#x7F72;&#xFF0C;&#x53EA;&#x8981;&#x4F7F;&#x7528;&#x81EA;&#x5B9A;&#x4E49;ssl&#x7AEF;&#x53E3;&#xFF0C;&#x603B;&#x662F;&#x51FA;&#x73B0;&#x4EE5;&#x4E0B;&#x62A5;&#x9519;&#xFF1A;</p>
-<pre><code># Health check:
-#     - not connected to home DERP region 900  //region 900&#x662F;&#x81EA;&#x5B9A;&#x4E49;derp&#x670D;&#x52A1;
-</code></pre><p>  &#x51FA;&#x73B0;&#x4E0A;&#x8FF0;&#x62A5;&#x9519;&#x7684;&#x4E00;&#x4E2A;&#x77DB;&#x76FE;&#x70B9;&#xFF1A;tailscale netcheck&#x68C0;&#x6D4B;&#x5230;&#x81EA;&#x5B9A;&#x4E49;&#x7684;derp&#x670D;&#x52A1;&#xFF08;&#x6392;&#x540D;&#x7B2C;&#x4E00;&#x4E2A;&#xFF09;&#xFF0C;&#x8BF4;&#x660E;udp&#x6B63;&#x5E38;&#xFF1B;&#x8BBF;&#x95EE;<a href="https://derpdomain:port" target="_blank">https://derpdomain:port</a> &#x4E5F;&#x6B63;&#x5E38;&#xFF0C;&#x8BF4;&#x660E;tcp&#x4E5F;&#x6CA1;&#x95EE;&#x9898;&#x3002;&#x90A3;&#x8FD8;&#x4E00;&#x4E2A;&#x53EF;&#x80FD;&#x6027;&#x5C31;&#x662F;&#x5BA2;&#x6237;&#x7AEF;&#x6821;&#x9A8C;&#xFF0C;&#x4F46;&#x662F;&#x4E0D;&#x7BA1;&#x6211;&#x662F;&#x5426;&#x5F00;&#x542F;&quot;-verify-clients&quot;&#xFF0C;&#x4F9D;&#x65E7;&#x662F;&quot;not connected to home DERP region&quot;&#x3002;</p>
-<h2 id="udp&#x534F;&#x8BAE;&#x7684;&#x5751;">UDP&#x534F;&#x8BAE;&#x7684;&#x5751;</h2>
-<p>  &#x672C;&#x6765;udp&#x7684;3478&#x7AEF;&#x53E3;&#x5DF2;&#x7ECF;&#x5199;&#x6B7B;&#xFF0C;&#x6CA1;&#x6709;&#x53EF;&#x53D8;&#x7A7A;&#x95F4;&#x3002;&#x5982;&#x679C;&#x4F60;&#x7684;derp&#x670D;&#x52A1;&#x5EFA;&#x5728;&#x5BB6;&#x5BBD;&#x7F13;&#x89E3;&#xFF0C;&#x8FD0;&#x8425;&#x5546;&#x53EF;&#x80FD;&#x5E72;&#x6270;&#x751A;&#x81F3;&#x5C4F;&#x853D;udp&#xFF0C;&#x6545;&#x5C3D;&#x91CF;&#x4E0D;&#x8981;&#x5728;&#x5BB6;&#x5BBD;&#x73AF;&#x5883;&#x642D;&#x5EFA;derp&#x670D;&#x52A1;&#x3002;</p>
-<h2 id="&#x603B;&#x7ED3;">&#x603B;&#x7ED3;</h2>
-<p>&#x4E3A;&#x4E86;&#x907F;&#x514D;&#x5E72;&#x6270;&#xFF0C;&#x4E0B;&#x9762;&#x7684;&#x6D4B;&#x8BD5;&#x91C7;&#x7528;&#x9999;&#x6E2F;&#x670D;&#x52A1;&#x5668;&#xFF0C;&#x81EA;&#x5EFA;derp&#x7684;&#x670D;&#x52A1;&#x5668;&#x5DF2;&#x542F;&#x52A8;tailscale&#x5BA2;&#x6237;&#x7AEF;&#x5E76;&#x52A0;&#x5165;&#x8D26;&#x53F7;&#xFF0C;docker-compose&#x89C1;&#x6700;&#x540E;&#xFF0C;&#x4E8C;&#x8FDB;&#x5236;&#xFF1A;<code>go version go1.20</code>  &#x548C;<code>go install tailscale.com/cmd/derper@main</code> </p>
-<ol>
-<li><p>&#x4E8C;&#x8FDB;&#x5236;&#x90E8;&#x7F72;&#xFF0C;&#x7AEF;&#x53E3;443+3478&#xFF0C;&#x4E00;&#x5207;&#x6B63;&#x5E38;</p>
-</li>
-<li><p>&#x4E8C;&#x8FDB;&#x5236;&#x90E8;&#x7F72;&#xFF0C;&#x7AEF;&#x53E3;5443+&#x81EA;&#x5B9A;&#x4E49;cert+3478&#xFF0C;&#x65E0;&#x8BBA;&#x662F;&#x5426;&#x5F00;&#x542F;&#x5BA2;&#x6237;&#x7AEF;&#x6821;&#x9A8C;&#xFF0C;&#x62A5;&#x9519;&quot;not connected to home DERP region&quot;</p>
-</li>
-<li><p>docker&#x90E8;&#x7F72;&#xFF0C;&#x65E0;&#x8BBA;https&#x7AEF;&#x53E3;&#x662F;&#x5426;&#x81EA;&#x5B9A;&#x4E49;&#xFF0C;&#x65E0;&#x8BBA;&#x662F;&#x5426;&#x5F00;&#x542F;&#x5BA2;&#x6237;&#x7AEF;&#x6821;&#x9A8C;&#xFF0C;&#x62A5;&#x9519;&quot;not connected to home DERP region&quot; </p>
-</li>
-</ol>
-<pre><code>cat docker-compose.yml
-version: &apos;3.5&apos;
-services:
-  derper:
-    container_name: derper
-    image: fredliang/derper
-    restart: always
-    volumes:
-      - ./cert:/cert
-      - /var/run/tailscale/tailscaled.sock:/var/run/tailscale/tailscaled.sock
-      - /etc/localtime:/etc/localtime
-    ports:
-      - 3478:3478/udp
-      - 443:443
-    //network_mode: &quot;host&quot;
-    environment:
-      DERP_DOMAIN: derp.domain.com
-      DERP_ADDR: &quot;:443&quot;
-      DERP_CERT_MODE: manual
-      DERP_CERT_DIR: /cert
-      DERP_VERIFY_CLIENTS: &quot;true&quot;
+                                <p>&#x6B64;&#x6A21;&#x677F;&#x6E90;&#x81EA;&#x4ED6;&#x4EBA;&#xFF0C;&#x4F9B;&#x53C2;&#x8003;</p>
+<h2 id="1-main&#x5305;">1. main&#x5305;</h2>
+<pre><code>/**
+ * @Author: xuyasong
+ * @Description:
+ * @File:  main
+ * @Version: 1.0.0
+ * @Date: 2019/2/22
+ */
+
+package main
+
+import (
+    &quot;flag&quot;
+    &quot;log&quot;
+    &quot;net/http&quot;
+
+    &quot;demo/collector&quot;
+
+    &quot;github.com/prometheus/client_golang/prometheus&quot;
+    &quot;github.com/prometheus/client_golang/prometheus/promhttp&quot;
+)
+
+var (
+    // &#x547D;&#x4EE4;&#x884C;&#x53C2;&#x6570;
+    listenAddr       = flag.String(&quot;web.listen-port&quot;, &quot;9002&quot;, &quot;An port to listen on for web interface and telemetry.&quot;)
+    metricsPath      = flag.String(&quot;web.telemetry-path&quot;, &quot;/metrics&quot;, &quot;A path under which to expose metrics.&quot;)
+    metricsNamespace = flag.String(&quot;metric.namespace&quot;, &quot;bec&quot;, &quot;Prometheus metrics namespace, as the prefix of metrics name&quot;)
+)
+
+func main() {
+    flag.Parse()
+
+    metrics := collector.NewMetrics(*metricsNamespace)
+    registry := prometheus.NewRegistry()
+    registry.MustRegister(metrics)
+
+    http.Handle(*metricsPath, promhttp.HandlerFor(registry, promhttp.HandlerOpts{}))
+
+    http.HandleFunc(&quot;/&quot;, func(w http.ResponseWriter, r *http.Request) {
+        w.Write([]byte(`&lt;html&gt;
+            &lt;head&gt;&lt;title&gt;A Prometheus Exporter&lt;/title&gt;&lt;/head&gt;
+            &lt;body&gt;
+            &lt;h1&gt;A Prometheus Exporter&lt;/h1&gt;
+            &lt;p&gt;&lt;a href=&apos;/metrics&apos;&gt;Metrics&lt;/a&gt;&lt;/p&gt;
+            &lt;/body&gt;
+            &lt;/html&gt;`))
+    })
+
+    log.Printf(&quot;Starting Server at http://localhost:%s%s&quot;, *listenAddr, *metricsPath)
+    log.Fatal(http.ListenAndServe(&quot;:&quot; + *listenAddr, nil))
+}
+</code></pre><h2 id="2-collector&#x5305;">2. collector&#x5305;</h2>
+<pre><code>/**
+ * @Author: xuyasong
+ * @Description:
+ * @File:  network
+ * @Version: 1.0.0
+ * @Date: 
+ */
+
+package collector
+
+import (
+    &quot;context&quot;
+    &quot;encoding/json&quot;
+    &quot;fmt&quot;
+    &quot;strconv&quot;
+    &quot;strings&quot;
+    &quot;sync&quot;
+    &quot;time&quot;
+
+    &quot;github.com/prometheus/client_golang/prometheus&quot;
+    &quot;github.com/prometheus/common/log&quot;
+)
+
+type Metrics struct {
+    metrics map[string]*prometheus.Desc
+    mutex   sync.Mutex
+}
+
+func newGlobalMetric(namespace string, metricName string, docString string, labels []string) *prometheus.Desc {
+    return prometheus.NewDesc(namespace+&quot;_&quot;+metricName, docString, labels, nil)
+}
+
+
+func NewMetrics(namespace string) *Metrics {
+    return &amp;Metrics{
+        metrics: map[string]*prometheus.Desc{
+            &quot;pod_network_receive_bytes&quot;:  newGlobalMetric(namespace, &quot;pod_network_receive_bytes&quot;, &quot;network receive bytes of pod &quot;, []string{&quot;pod_name&quot;, &quot;namespace&quot;, &quot;node_name&quot;}),
+    }
+}
+
+/**
+ * &#x63A5;&#x53E3;&#xFF1A;Describe
+ * &#x529F;&#x80FD;&#xFF1A;&#x4F20;&#x9012;&#x7ED3;&#x6784;&#x4F53;&#x4E2D;&#x7684;&#x6307;&#x6807;&#x63CF;&#x8FF0;&#x7B26;&#x5230;channel
+ */
+func (c *Metrics) Describe(ch chan&lt;- *prometheus.Desc) {
+    for _, m := range c.metrics {
+        ch &lt;- m
+    }
+}
+
+/**
+ * &#x63A5;&#x53E3;&#xFF1A;Collect
+ * &#x529F;&#x80FD;&#xFF1A;&#x6293;&#x53D6;&#x6700;&#x65B0;&#x7684;&#x6570;&#x636E;&#xFF0C;&#x4F20;&#x9012;&#x7ED9;channel
+ */
+func (c *Metrics) Collect(ch chan&lt;- prometheus.Metric) {
+    c.mutex.Lock() // &#x52A0;&#x9501;
+    defer c.mutex.Unlock()
+   // do something ,add metric to channel
+   //&#x5177;&#x4F53;&#x6307;&#x6807;&#x6570;&#x636E;&#x53EF;&#x4EE5;&#x7528;&#x53E6;&#x4E00;&#x4E2A;&#x5305;&#x91C7;&#x96C6;
+    ch &lt;- prometheus.MustNewConstMetric(c.metrics[&quot;pod_network_receive_bytes&quot;], prometheus.CounterValue, 0, pod.podName, pod.namespace, hostname)
+}
+</code></pre><h2 id="3-&#x90E8;&#x7F72;&#x53C2;&#x8003;">3. &#x90E8;&#x7F72;&#x53C2;&#x8003;</h2>
+<p>dockerfile</p>
+<pre><code>FROM nginx:stable-alpine
+
+MAINTAINER xuyasong
+
+RUN sed -i &apos;s/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g&apos; /etc/apk/repositories
+
+RUN mkdir -p /opt/bin &amp;&amp; chown -R root:root /opt \
+    &amp;&amp; apk update&amp;&amp;apk add --no-cache  wget curl less util-linux
+
+COPY bin/demo-exporter /opt/bin/demo-exporter
+
+COPY scripts /opt/bin/scripts
+
+CMD [&quot;/opt/bin/scripts/entrypoint.sh&quot;]
+</code></pre><p>entrypoint.sh</p>
+<pre><code>#!/bin/sh
+
+cd /opt
+mkdir -p log
+chmod 755 log
+bin/demo-exporter 2&gt;&gt;log/demo-exporter.log
+</code></pre><p>deployment</p>
+<pre><code>---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: demo-exporter
+  namespace: monitor
+  labels:
+    k8s-app: demo-exporter
+spec:
+  selector:
+    matchLabels:
+      k8s-app: demo-exporter
+  template:
+    metadata:
+      labels:
+        k8s-app: demo-exporter
+      annotations:
+        &quot;prometheus.io/scrape&quot;: &quot;true&quot;
+    spec:
+      containers:
+        - name: demo-exporter
+          image: demo-exporter
+          imagePullPolicy: Always
+          resources:
+            limits:
+              cpu: &quot;1&quot;
+              memory: &quot;500Mi&quot;
+            requests:
+              cpu: &quot;1&quot;
+              memory: &quot;200Mi&quot;
+          securityContext:
+            privileged: true
+          volumeMounts:
+          - mountPath: /opt/log
+            name: demo-exporter-log
+      volumes:
+        - hostPath:
+            path: /var/demo-exporter
+          name: demo-exporter-log
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    prometheus.io/scrape: &quot;true&quot;
+  labels:
+    k8s-app: demo-exporter
+  name: demo-exporter
+  namespace: monitor
+spec:
+  ports:
+  - name: http-metrics
+    port: 9006
+    protocol: TCP
+    targetPort: 9006
+  selector:
+    k8s-app: demo-exporter
+  type: ClusterIP
 </code></pre>
                                 
                                 </section>
@@ -524,10 +680,14 @@ services:
 
             
                 
-                <a href="../readme.md" class="navigation navigation-prev navigation-unique" aria-label="Previous page: Net">
+                <a href="../readme.md" class="navigation navigation-prev " aria-label="Previous page: Monitor">
                     <i class="fa fa-angle-left"></i>
                 </a>
                 
+                
+                <a href="../readme.md" class="navigation navigation-next " aria-label="Next page: K8s">
+                    <i class="fa fa-angle-right"></i>
+                </a>
                 
             
         
@@ -536,7 +696,7 @@ services:
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"自建derp中继遇到的坑","level":"5.1.1","depth":2,"previous":{"title":"Net","level":"5.1","depth":1,"path":"readme.md","ref":"readme.md","articles":[{"title":"自建derp中继遇到的坑","level":"5.1.1","depth":2,"path":"Net/自建derp中继遇到的坑.md","ref":"Net/自建derp中继遇到的坑.md","articles":[]}]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"Net/自建derp中继遇到的坑.md","mtime":"2023-03-08T04:09:32.000Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2023-03-21T12:17:37.439Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"go exporter模板","level":"3.1.1.1","depth":3,"next":{"title":"K8s","level":"3.1.2","depth":2,"path":"readme.md","ref":"readme.md","articles":[{"title":"Ubuntu 20.04安装k8s with containerd1.6.6","level":"3.1.2.1","depth":3,"path":"K8s/Ubuntu 20.04安装k8s with containerd1.6.6.md","ref":"K8s/Ubuntu 20.04安装k8s with containerd1.6.6.md","articles":[]}]},"previous":{"title":"Monitor","level":"3.1.1","depth":2,"path":"readme.md","ref":"readme.md","articles":[{"title":"go exporter模板","level":"3.1.1.1","depth":3,"path":"Monitor/go exporter模板.md","ref":"Monitor/go exporter模板.md","articles":[]}]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"Monitor/go exporter模板.md","mtime":"2023-03-21T12:17:14.316Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2023-03-21T12:17:37.439Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>
