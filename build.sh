@@ -8,6 +8,8 @@ cd $dst
 /bin/cp -rf ~/gitbook-pre/*md  .
 /bin/cp -rf ~/buildbook/*  .
 git checkout gh-pages
-git add .
-git commit -m "更新日志"
-git push
+if [[ $? -eq 0 ]];then
+  git add .
+  git commit -m "更新日志"
+  git push
+fi
