@@ -32,7 +32,7 @@
 
 如果已有本地分支则可以使用`git checkout devbranch`切换到本地分支，通过 git branch --set-upstream-to 命令设置关联
 
-`git branch --set-upstream-to develop origin/develop`
+`git branch --set-upstream-to=origin/<branch> master`
 
 ### 拉取远程分支
 
