@@ -19,6 +19,7 @@ bui# Summary
   * [K8s](readme.md)
     * [Ubuntu 20.04安装k8s with containerd1.6.6](K8s/Ubuntu 20.04安装k8s with containerd1.6.6.md)
   * [Terraform](readme.md)
+    * [阿里云terraform 记录](Terraform/阿里云terraform记录.md)
   * [Git](readme.md)
     * [git常用](Git/git常用.md) 
 
