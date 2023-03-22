@@ -22,7 +22,7 @@ bui# Summary
     * [阿里云terraform 记录](Terraform/阿里云terraform记录.md)
   * [Git](readme.md)
     * [git常用](Git/git常用.md) 
-    * [Git HTTPS密码登录的问题](Git/Git%20HTTPS密码登录的问题.md)
+    * [Git HTTPS密码登录的问题](Git/GitHTTPS密码登录的问题.md)
 
 --- 
 
