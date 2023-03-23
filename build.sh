@@ -11,5 +11,5 @@ if [[ $? -eq 0 ]];then
   /bin/cp -rf ~/buildbook/*  .
   git add .
   git commit -m "更新日志"
-  git push origin
+  git push
 fi
