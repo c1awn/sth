@@ -4,7 +4,7 @@
     <head>
         <meta charset="UTF-8">
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <title>Ubuntu 20.04安装k8s with containerd1.6.6 · GitBook</title>
+        <title>date获取GMT时间差 · GitBook</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="description" content="">
         <meta name="generator" content="GitBook 3.2.3">
@@ -60,7 +60,7 @@
     <link rel="next" href="../readme.md" />
     
     
-    <link rel="prev" href="../readme.md" />
+    <link rel="prev" href="shell判断ssl证书过期时间.html" />
     
 
     </head>
@@ -182,9 +182,9 @@
             <ul class="articles">
                 
     
-        <li class="chapter " data-level="2.1.3.1" data-path="../Scripts/shell判断ssl证书过期时间.html">
+        <li class="chapter " data-level="2.1.3.1" data-path="shell判断ssl证书过期时间.html">
             
-                <a href="../Scripts/shell判断ssl证书过期时间.html">
+                <a href="shell判断ssl证书过期时间.html">
             
                     
                     shell判断ssl证书过期时间
@@ -195,9 +195,9 @@
             
         </li>
     
-        <li class="chapter " data-level="2.1.3.2" data-path="../Scripts/date获取GMT时间差.html">
+        <li class="chapter active" data-level="2.1.3.2" data-path="date获取GMT时间差.html">
             
-                <a href="../Scripts/date获取GMT时间差.html">
+                <a href="date获取GMT时间差.html">
             
                     
                     date获取GMT时间差
@@ -285,9 +285,9 @@
             <ul class="articles">
                 
     
-        <li class="chapter active" data-level="3.1.2.1" data-path="Ubuntu 20.04安装k8s with containerd1.6.6.html">
+        <li class="chapter " data-level="3.1.2.1" data-path="../K8s/Ubuntu 20.04安装k8s with containerd1.6.6.html">
             
-                <a href="Ubuntu 20.04安装k8s with containerd1.6.6.html">
+                <a href="../K8s/Ubuntu 20.04安装k8s with containerd1.6.6.html">
             
                     
                     Ubuntu 20.04安装k8s with containerd1.6.6
@@ -525,7 +525,7 @@
     <!-- Title -->
     <h1>
         <i class="fa fa-circle-o-notch fa-spin"></i>
-        <a href=".." >Ubuntu 20.04安装k8s with containerd1.6.6</a>
+        <a href=".." >date获取GMT时间差</a>
     </h1>
 </div>
 
@@ -540,37 +540,45 @@
     
                                 <section class="normal markdown-section">
                                 
-                                <h2 id="&#x7248;&#x672C;&#x8BF4;&#x660E;">&#x7248;&#x672C;&#x8BF4;&#x660E;</h2>
-<p>Ubuntu 20.04
-containerd 1.6.6</p>
-<blockquote>
-<p>Ubuntu 20.04&#x81EA;&#x5E26;&#x7684;containerd&#x662F;1.5.9&#xFF0C;&#x5B58;&#x5728;bug&#xFF0C;&#x6545;&#x4E0D;&#x8981;dpk&#x5B89;&#x88C5;&#xFF0C;&#x800C;&#x662F;&#x4F7F;&#x7528;&#x5B98;&#x7F51;&#x7684;&#x4E8C;&#x8FDB;&#x5236;&#x5B89;&#x88C5;&#x3002;&#x8C8C;&#x4F3C;containerd 1.6.6 &#x652F;&#x6301;k8s 1.24+&#x7248;&#x672C;&#xFF0C;&#x4E0D;&#x5FC5;&#x7279;&#x610F;&#x5339;&#x914D;&#x6700;&#x65B0;&#x7248;&#x7684;k8s&#xFF0C;&#x6B64;&#x7ED3;&#x8BBA;&#x672A;&#x9A8C;&#x8BC1;</p>
-</blockquote>
-<p>kubelet kubeadm kubectl v1.24.3(&#x7406;&#x8BBA;&#x53EF;&#x4EE5;&#x9009;&#x62E9;&#x66F4;&#x9AD8;&#x7248;&#x672C;&#xFF0C;&#x672A;&#x6D4B;&#x8BD5;)</p>
-<h2 id="&#x5B89;&#x88C5;&#x6B65;&#x9AA4;&#x8BF4;&#x660E;">&#x5B89;&#x88C5;&#x6B65;&#x9AA4;&#x8BF4;&#x660E;</h2>
-<ul>
-<li><ol>
-<li>pre check
-Ubuntu &#x9ED8;&#x8BA4;&#x65E0;selinux&#xFF0C;&#x65E0;&#x9700;&#x7279;&#x610F;&#x5173;&#x95ED;<br>Ubuntu &#x9ED8;&#x8BA4;&#x5173;&#x95ED;ufw&#x9632;&#x706B;&#x5899;&#xFF0C;&#x65E0;&#x9700;&#x7279;&#x610F;&#x5173;&#x95ED;<br>&#x5176;&#x4ED6;&#x51C6;&#x5907;&#x5DE5;&#x4F5C;&#x53C2;&#x89C1;&#x5B98;&#x7F51;&#xFF0C;&#x5982;&#x5173;&#x95ED;swap&#xFF0C;&#x5F00;&#x542F;ipv4&#x8F6C;&#x53D1;&#x7B49;&#x7B49;</li>
-</ol>
-</li>
-<li><ol>
-<li>&#x57FA;&#x7840;&#x7EC4;&#x4EF6;&#x5B89;&#x88C5;</li>
-</ol>
-</li>
-<li>containerd&#x4F7F;&#x7528;&#x4E8C;&#x8FDB;&#x5236;&#x5B89;&#x88C5;&#xFF0C;&#x4E14;&#x9700;&#x4FEE;&#x6539;/etc/containerd/config.toml&#x4E24;&#x5904;&#xFF1A;sandbox_image = &quot;registry.aliyuncs.com/google_containers/pause:3.6&quot;&#x548C;SystemdCgroup = true&#xFF0C;SystemdCgroup&#x662F;&#x542F;&#x7528;Systemd&#x7BA1;&#x7406;cgroup&#x3002;&#x6CE8;&#x610F;&#x6539;&#x7684;&#x662F;SystemdCgroup = false&#xFF0C;&#x800C;&#x4E0D;&#x662F;systemd_cgroup = false</li>
-<li>apt-get install -y kubelet kubeadm kubectl&#x4E4B;&#x524D;&#x901A;&#x5E38;&#x6307;&#x5B9A;&#x4E86;&#x5982;&#x963F;&#x91CC;&#x4E91;&#x6E90;&#xFF0C;&#x6307;&#x5B9A;&#x7248;&#x672C;&#x5B89;&#x88C5;&#x4F7F;&#x7528;apt-get install -y kubelet=1.24.3-00 kubeadm=1.24.3-00 kubectl=1.24.3-00&#xFF0C;&#x7248;&#x672C;&#x53F7;&#x6765;&#x81EA;&#x67E5;&#x8BE2;apt-cache madison kubeadm|grep 1.24.3</li>
-<li><ol>
-<li>control-plane&#x521D;&#x59CB;&#x5316;/node&#x52A0;&#x5165;&#x96C6;&#x7FA4;</li>
-</ol>
-</li>
-<li>&#x521D;&#x59CB;&#x5316;&#xFF1A; kubeadm init --image-repository registry.aliyuncs.com/google_containers --apiserver-advertise-address=${masterip} --pod-network-cidr=10.244.0.0/16 --control-plane-endpoint=${masterhostname}</li>
-<li>&#x52A0;&#x5165;&#x8282;&#x70B9;&#x524D;&#x5148;&#x5B89;&#x88C5;cni&#x63D2;&#x4EF6;&#xFF0C;kubectl apply -f kube-flannel.yml--<a href="https://raw.githubusercontent.com/flannel-io/flannel/master/Documentation/kube-flannel.yml" target="_blank">https://raw.githubusercontent.com/flannel-io/flannel/master/Documentation/kube-flannel.yml</a>   &#x65E0;cni&#x63D2;&#x4EF6;&#x7684;&#x8BDD;&#xFF0C;pod&#x4E0D;&#x80FD;&#x6B63;&#x5E38;running&#x3002;&#x5148;&#x4E0B;&#x8F7D;&#xFF0C;&#x4FEE;&#x6539; kube-flannel.yml&#xFF0C;&#x5728;&#x7EA6;&#x7B2C; 200 &#x884C;&#x5DE6;&#x53F3;&#x589E;&#x52A0;&#x6307;&#x5B9A;&#x7F51;&#x5361;&#x7684;&#x914D;&#x7F6E;&#xFF08;&quot;- --kube-subnet-mgr&quot;&#x6240;&#x5728;&#x884C;&#x4E0B;&#x9762;&#xFF09;:&quot;- --iface=ens33&quot;&#xFF0C;&#x5199;&#x6B7B;&#x6307;&#x5B9A;&#x7F51;&#x5361;&#x662F;&#x4E3A;&#x4E86;&#x907F;&#x514D;&#x591A;&#x4E2A;&#x7F51;&#x5361;&#x51FA;&#x73B0;&#x610F;&#x5916;&#x3002;</li>
-<li>&#x5207;&#x6362;IPVS&#xFF0C;&#x68C0;&#x67E5;&#x662F;&#x5426;&#x652F;&#x6301;&#x3001;install ipvsadm&#x3001;edit kube-proxy&#x540E;&#x5220;&#x9664;kube-proxy pod &#x751F;&#x6548;</li>
-</ul>
-<p><a href="https://blog.abreaking.com/article/171" target="_blank">&#x53C2;&#x8003;1</a><br><a href="https://www.jianshu.com/p/88d29d96337e" target="_blank">&#x53C2;&#x8003;2</a>
-<a href="https://www.luyouli.com/?p=558" target="_blank">&#x5207;&#x6362;ipvs</a></p>
+                                <h2 id="1-&#x9700;&#x6C42;">1. &#x9700;&#x6C42;</h2>
+<p>&#x76EE;&#x6807;&#x65F6;&#x95F4;&#x662F;GMT&#x683C;&#x5F0F;&#xFF0C;&#x9700;&#x8981;&#x83B7;&#x53D6;&#x548C;&#x5F53;&#x524D;&#x65F6;&#x95F4;&#x7684;&#x65F6;&#x95F4;&#x5DEE;</p>
+<h2 id="2-&#x5B9E;&#x73B0;">2. &#x5B9E;&#x73B0;</h2>
+<p>&#x53C2;&#x8003;&#x811A;&#x672C;</p>
+<pre><code>#!/bin/bash
+Time_get(){
+  time_GMT=$1
+  # GMT&#x65F6;&#x95F4;&#x8F6C;&#x4E3A;&#x65F6;&#x95F4;&#x6233;
+  timestamp_get=$(date -d &quot;${time_GMT}&quot; +%s)
+  echo &quot;&#x76EE;&#x6807;&#x65F6;&#x95F4;GMT &quot; ${time_GMT}
+  echo &quot;&#x76EE;&#x6807;&#x65F6;&#x95F4;&#x6233; &quot; ${timestamp_get}
+}
 
+Time_cur(){
+  curtime_GMT=$(date -u &apos;+%b %d %T %Y GMT&apos;)
+  timestamp_cur=$(date -d &quot;${curtime_GMT}&quot; +%s)
+  echo &quot;&#x5F53;&#x524D;&#x65F6;&#x95F4;GMT &quot; ${curtime_GMT}
+  echo &quot;&#x5F53;&#x524D;&#x65F6;&#x95F4;&#x6233; &quot; ${timestamp_cur}
+}
+
+main(){
+  expired=&quot;Apr 22 23:59:59 2023 GMT&quot;
+  Time_get &quot;${expired}&quot;
+  Time_cur
+  #&#x65F6;&#x95F4;&#x6233;&#x7684;&#x5DEE;&#xFF0C;&#x5355;&#x4F4D;&#x79D2;
+  left_s=`expr &quot;${timestamp_get}&quot; - &quot;${timestamp_cur}&quot;`
+  #&#x79D2;&#x8F6C;&#x6362;&#x4E3A;&#x5929;&#xFF0C;%0.0f&#x4FDD;&#x7559;0&#x4F4D;&#x5C0F;&#x6570;
+  left_day=`awk &apos;BEGIN{printf &quot;%0.0f&quot;,&quot;&apos;${left_s}&apos;&quot;/3600/24}&apos;`
+  echo &quot;&#x76EE;&#x6807;&#x65F6;&#x95F4; &#x548C; &#x5F53;&#x524D;&#x65F6;&#x95F4; &#x76F8;&#x5DEE;&#x5929;&#x6570;&#xFF1A;&quot; ${left_day}
+}
+
+main
+</code></pre><p>&#x6267;&#x884C;&#x7ED3;&#x679C;</p>
+<pre><code>&#x76EE;&#x6807;&#x65F6;&#x95F4;GMT  Apr 22 23:59:59 2023 GMT
+&#x76EE;&#x6807;&#x65F6;&#x95F4;&#x6233;  1682207999
+&#x5F53;&#x524D;&#x65F6;&#x95F4;GMT  Jan 05 07:38:07 2023 GMT
+&#x5F53;&#x524D;&#x65F6;&#x95F4;&#x6233;  1672904287
+&#x76EE;&#x6807;&#x65F6;&#x95F4; &#x548C; &#x5F53;&#x524D;&#x65F6;&#x95F4; &#x76F8;&#x5DEE;&#x5929;&#x6570;&#xFF1A; 108
+</code></pre>
                                 
                                 </section>
                             
@@ -597,12 +605,12 @@ Ubuntu &#x9ED8;&#x8BA4;&#x65E0;selinux&#xFF0C;&#x65E0;&#x9700;&#x7279;&#x610F;&#
 
             
                 
-                <a href="../readme.md" class="navigation navigation-prev " aria-label="Previous page: K8s">
+                <a href="shell判断ssl证书过期时间.html" class="navigation navigation-prev " aria-label="Previous page: shell判断ssl证书过期时间">
                     <i class="fa fa-angle-left"></i>
                 </a>
                 
                 
-                <a href="../readme.md" class="navigation navigation-next " aria-label="Next page: Terraform">
+                <a href="../readme.md" class="navigation navigation-next " aria-label="Next page: Devops">
                     <i class="fa fa-angle-right"></i>
                 </a>
                 
@@ -613,7 +621,7 @@ Ubuntu &#x9ED8;&#x8BA4;&#x65E0;selinux&#xFF0C;&#x65E0;&#x9700;&#x7279;&#x610F;&#
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Ubuntu 20.04安装k8s with containerd1.6.6","level":"3.1.2.1","depth":3,"next":{"title":"Terraform","level":"3.1.3","depth":2,"path":"readme.md","ref":"readme.md","articles":[{"title":"阿里云terraform 记录","level":"3.1.3.1","depth":3,"path":"Terraform/阿里云terraform记录.md","ref":"Terraform/阿里云terraform记录.md","articles":[]}]},"previous":{"title":"K8s","level":"3.1.2","depth":2,"path":"readme.md","ref":"readme.md","articles":[{"title":"Ubuntu 20.04安装k8s with containerd1.6.6","level":"3.1.2.1","depth":3,"path":"K8s/Ubuntu 20.04安装k8s with containerd1.6.6.md","ref":"K8s/Ubuntu 20.04安装k8s with containerd1.6.6.md","articles":[]}]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"K8s/Ubuntu 20.04安装k8s with containerd1.6.6.md","mtime":"2023-03-21T11:54:10.000Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2023-03-24T08:23:01.169Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"date获取GMT时间差","level":"2.1.3.2","depth":3,"next":{"title":"Devops","level":"3.1","depth":1,"path":"readme.md","ref":"readme.md","articles":[{"title":"Monitor","level":"3.1.1","depth":2,"path":"readme.md","ref":"readme.md","articles":[{"title":"go exporter模板","level":"3.1.1.1","depth":3,"path":"Monitor/go exporter模板.md","ref":"Monitor/go exporter模板.md","articles":[]}]},{"title":"K8s","level":"3.1.2","depth":2,"path":"readme.md","ref":"readme.md","articles":[{"title":"Ubuntu 20.04安装k8s with containerd1.6.6","level":"3.1.2.1","depth":3,"path":"K8s/Ubuntu 20.04安装k8s with containerd1.6.6.md","ref":"K8s/Ubuntu 20.04安装k8s with containerd1.6.6.md","articles":[]}]},{"title":"Terraform","level":"3.1.3","depth":2,"path":"readme.md","ref":"readme.md","articles":[{"title":"阿里云terraform 记录","level":"3.1.3.1","depth":3,"path":"Terraform/阿里云terraform记录.md","ref":"Terraform/阿里云terraform记录.md","articles":[]}]},{"title":"Git","level":"3.1.4","depth":2,"path":"readme.md","ref":"readme.md","articles":[{"title":"git常用","level":"3.1.4.1","depth":3,"path":"Git/git常用.md","ref":"Git/git常用.md","articles":[]},{"title":"Git HTTPS密码登录的问题","level":"3.1.4.2","depth":3,"path":"Git/GitHTTPS密码登录的问题.md","ref":"Git/GitHTTPS密码登录的问题.md","articles":[]}]}]},"previous":{"title":"shell判断ssl证书过期时间","level":"2.1.3.1","depth":3,"path":"Scripts/shell判断ssl证书过期时间.md","ref":"Scripts/shell判断ssl证书过期时间.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"Scripts/date获取GMT时间差.md","mtime":"2023-03-24T08:20:31.000Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2023-03-24T08:23:01.169Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>

@@ -10,6 +10,7 @@ bui# Summary
   * [Python](readme.md)
   * [Scripts](readme.md)
     * [shell判断ssl证书过期时间](Scripts/shell判断ssl证书过期时间.md)
+    * [date获取GMT时间差](Scripts/date获取GMT时间差.md)
 
 ---
 
@@ -28,6 +29,7 @@ bui# Summary
 
 * [MiddleWare](readme.md)
   * [Nginx](readme.md)
+    * [nginx跨域](Nginx/nginx跨域.md)
   * [Kafka](readme.md) 
 
 --- 
