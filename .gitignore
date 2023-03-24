@@ -36,3 +36,7 @@ bulid/
 #sh
 *.sh
 
+#md
+*.md
+!SUMMARY.md
+!README.md
