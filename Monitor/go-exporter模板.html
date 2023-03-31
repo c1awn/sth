@@ -4,7 +4,7 @@
     <head>
         <meta charset="UTF-8">
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <title>shell判断ssl证书过期时间 · GitBook</title>
+        <title>go exporter模板 · GitBook</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="description" content="">
         <meta name="generator" content="GitBook 3.2.3">
@@ -57,7 +57,7 @@
     <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
 
     
-    <link rel="next" href="date获取GMT时间差.html" />
+    <link rel="next" href="../PrometheusOperator的理解.md" />
     
     
     <link rel="prev" href="../readme.md" />
@@ -182,9 +182,9 @@
             <ul class="articles">
                 
     
-        <li class="chapter active" data-level="2.1.3.1" data-path="shell判断ssl证书过期时间.html">
+        <li class="chapter " data-level="2.1.3.1" data-path="../Scripts/shell判断ssl证书过期时间.html">
             
-                <a href="shell判断ssl证书过期时间.html">
+                <a href="../Scripts/shell判断ssl证书过期时间.html">
             
                     
                     shell判断ssl证书过期时间
@@ -195,9 +195,9 @@
             
         </li>
     
-        <li class="chapter " data-level="2.1.3.2" data-path="date获取GMT时间差.html">
+        <li class="chapter " data-level="2.1.3.2" data-path="../Scripts/date获取GMT时间差.html">
             
-                <a href="date获取GMT时间差.html">
+                <a href="../Scripts/date获取GMT时间差.html">
             
                     
                     date获取GMT时间差
@@ -253,9 +253,9 @@
             <ul class="articles">
                 
     
-        <li class="chapter " data-level="3.1.1.1" data-path="../Monitor/go-exporter模板.html">
+        <li class="chapter active" data-level="3.1.1.1" data-path="go-exporter模板.html">
             
-                <a href="../Monitor/go-exporter模板.html">
+                <a href="go-exporter模板.html">
             
                     
                     go exporter模板
@@ -538,7 +538,7 @@
     <!-- Title -->
     <h1>
         <i class="fa fa-circle-o-notch fa-spin"></i>
-        <a href=".." >shell判断ssl证书过期时间</a>
+        <a href=".." >go exporter模板</a>
     </h1>
 </div>
 
@@ -553,42 +553,202 @@
     
                                 <section class="normal markdown-section">
                                 
-                                <p>&#x53C2;&#x8003;&#x811A;&#x672C;</p>
-<pre><code>cat check_ssldate.sh
-#!/bin/bash
-array=(www.qq.com)
+                                <p>&#x6B64;&#x6A21;&#x677F;&#x6E90;&#x81EA;&#x4ED6;&#x4EBA;&#xFF0C;&#x4F9B;&#x53C2;&#x8003;</p>
+<h2 id="1-main&#x5305;">1. main&#x5305;</h2>
+<pre><code>/**
+ * @Author: xuyasong
+ * @Description:
+ * @File:  main
+ * @Version: 1.0.0
+ * @Date: 2019/2/22
+ */
 
-Time_left(){
-  #&#x8FC7;&#x671F;&#x65F6;&#x95F4;
-  time_GMT=$1
-  # GMT&#x65F6;&#x95F4;&#x8F6C;&#x4E3A;&#x65F6;&#x95F4;&#x6233;
-  timestamp_get=$(date -d &quot;${time_GMT}&quot; +%s)
-  #&#x5F53;&#x524D;&#x65F6;&#x95F4;
-  curtime_GMT=$(date -u &apos;+%b %d %T %Y GMT&apos;)
-  timestamp_cur=$(date -d &quot;${curtime_GMT}&quot; +%s)
-  #&#x65F6;&#x95F4;&#x6233;&#x7684;&#x5DEE;&#xFF0C;&#x5355;&#x4F4D;&#x79D2;
-  left_s=`expr &quot;${timestamp_get}&quot; - &quot;${timestamp_cur}&quot;`
-  left_day=`awk &apos;BEGIN{printf &quot;%0.0f&quot;,&quot;&apos;${left_s}&apos;&quot;/3600/24}&apos;`
+package main
+
+import (
+    &quot;flag&quot;
+    &quot;log&quot;
+    &quot;net/http&quot;
+
+    &quot;demo/collector&quot;
+
+    &quot;github.com/prometheus/client_golang/prometheus&quot;
+    &quot;github.com/prometheus/client_golang/prometheus/promhttp&quot;
+)
+
+var (
+    // &#x547D;&#x4EE4;&#x884C;&#x53C2;&#x6570;
+    listenAddr       = flag.String(&quot;web.listen-port&quot;, &quot;9002&quot;, &quot;An port to listen on for web interface and telemetry.&quot;)
+    metricsPath      = flag.String(&quot;web.telemetry-path&quot;, &quot;/metrics&quot;, &quot;A path under which to expose metrics.&quot;)
+    metricsNamespace = flag.String(&quot;metric.namespace&quot;, &quot;bec&quot;, &quot;Prometheus metrics namespace, as the prefix of metrics name&quot;)
+)
+
+func main() {
+    flag.Parse()
+
+    metrics := collector.NewMetrics(*metricsNamespace)
+    registry := prometheus.NewRegistry()
+    registry.MustRegister(metrics)
+
+    http.Handle(*metricsPath, promhttp.HandlerFor(registry, promhttp.HandlerOpts{}))
+
+    http.HandleFunc(&quot;/&quot;, func(w http.ResponseWriter, r *http.Request) {
+        w.Write([]byte(`&lt;html&gt;
+            &lt;head&gt;&lt;title&gt;A Prometheus Exporter&lt;/title&gt;&lt;/head&gt;
+            &lt;body&gt;
+            &lt;h1&gt;A Prometheus Exporter&lt;/h1&gt;
+            &lt;p&gt;&lt;a href=&apos;/metrics&apos;&gt;Metrics&lt;/a&gt;&lt;/p&gt;
+            &lt;/body&gt;
+            &lt;/html&gt;`))
+    })
+
+    log.Printf(&quot;Starting Server at http://localhost:%s%s&quot;, *listenAddr, *metricsPath)
+    log.Fatal(http.ListenAndServe(&quot;:&quot; + *listenAddr, nil))
+}
+</code></pre><h2 id="2-collector&#x5305;">2. collector&#x5305;</h2>
+<pre><code>/**
+ * @Author: xuyasong
+ * @Description:
+ * @File:  network
+ * @Version: 1.0.0
+ * @Date: 
+ */
+
+package collector
+
+import (
+    &quot;context&quot;
+    &quot;encoding/json&quot;
+    &quot;fmt&quot;
+    &quot;strconv&quot;
+    &quot;strings&quot;
+    &quot;sync&quot;
+    &quot;time&quot;
+
+    &quot;github.com/prometheus/client_golang/prometheus&quot;
+    &quot;github.com/prometheus/common/log&quot;
+)
+
+type Metrics struct {
+    metrics map[string]*prometheus.Desc
+    mutex   sync.Mutex
 }
 
-main(){
-  #&#x5C06;$1&#x8F6C;&#x6362;&#x4E3A;&#x65B0;&#x7684;arr&#xFF0C;&#x4E0D;&#x80FD;&#x76F4;&#x63A5;&#x4F7F;&#x7528;&#x5E38;&#x89C4;&#x7684;$1
-  newarr=($@)
-  echo &quot;&#x672C;&#x6B21;&#x68C0;&#x67E5;&#x57DF;&#x540D;&#x5217;&#x8868;&#xFF1A;&quot;${newarr[@]}
-  echo &quot;###########check start###########&quot;
-  for dm in  ${newarr[@]};do
-    out=`echo | openssl s_client -servername $dm -connect $dm:443 2&gt;/dev/null | openssl x509 -noout -dates 2&gt;/dev/null|sed &quot;:a;N;s/\n/ /g;ta&quot;`
-    expired=`echo $out|awk -F= &apos;{print $NF}&apos;`
-    Time_left &quot;${expired}&quot;
-    [[ -n &quot;$out&quot; ]]&amp;&amp;echo -n $dm &quot;,&quot; $out&amp;&amp;echo &quot; ,&#x5269;&#x4F59;&#x5929;&#x6570;&#xFF1A;&quot; ${left_day}
-    [[ -z &quot;$out&quot; ]]&amp;&amp;echo $dm &quot;,&quot; &quot;empty&quot;
-  done
-  echo &quot;###########check stop###########&quot;
+func newGlobalMetric(namespace string, metricName string, docString string, labels []string) *prometheus.Desc {
+    return prometheus.NewDesc(namespace+&quot;_&quot;+metricName, docString, labels, nil)
 }
 
 
-#&#x6D4B;&#x8BD5;
-main ${array[@]}
+func NewMetrics(namespace string) *Metrics {
+    return &amp;Metrics{
+        metrics: map[string]*prometheus.Desc{
+            &quot;pod_network_receive_bytes&quot;:  newGlobalMetric(namespace, &quot;pod_network_receive_bytes&quot;, &quot;network receive bytes of pod &quot;, []string{&quot;pod_name&quot;, &quot;namespace&quot;, &quot;node_name&quot;}),
+    }
+}
+
+/**
+ * &#x63A5;&#x53E3;&#xFF1A;Describe
+ * &#x529F;&#x80FD;&#xFF1A;&#x4F20;&#x9012;&#x7ED3;&#x6784;&#x4F53;&#x4E2D;&#x7684;&#x6307;&#x6807;&#x63CF;&#x8FF0;&#x7B26;&#x5230;channel
+ */
+func (c *Metrics) Describe(ch chan&lt;- *prometheus.Desc) {
+    for _, m := range c.metrics {
+        ch &lt;- m
+    }
+}
+
+/**
+ * &#x63A5;&#x53E3;&#xFF1A;Collect
+ * &#x529F;&#x80FD;&#xFF1A;&#x6293;&#x53D6;&#x6700;&#x65B0;&#x7684;&#x6570;&#x636E;&#xFF0C;&#x4F20;&#x9012;&#x7ED9;channel
+ */
+func (c *Metrics) Collect(ch chan&lt;- prometheus.Metric) {
+    c.mutex.Lock() // &#x52A0;&#x9501;
+    defer c.mutex.Unlock()
+   // do something ,add metric to channel
+   //&#x5177;&#x4F53;&#x6307;&#x6807;&#x6570;&#x636E;&#x53EF;&#x4EE5;&#x7528;&#x53E6;&#x4E00;&#x4E2A;&#x5305;&#x91C7;&#x96C6;
+    ch &lt;- prometheus.MustNewConstMetric(c.metrics[&quot;pod_network_receive_bytes&quot;], prometheus.CounterValue, 0, pod.podName, pod.namespace, hostname)
+}
+</code></pre><h2 id="3-&#x90E8;&#x7F72;&#x53C2;&#x8003;">3. &#x90E8;&#x7F72;&#x53C2;&#x8003;</h2>
+<p>dockerfile</p>
+<pre><code>FROM nginx:stable-alpine
+
+MAINTAINER xuyasong
+
+RUN sed -i &apos;s/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g&apos; /etc/apk/repositories
+
+RUN mkdir -p /opt/bin &amp;&amp; chown -R root:root /opt \
+    &amp;&amp; apk update&amp;&amp;apk add --no-cache  wget curl less util-linux
+
+COPY bin/demo-exporter /opt/bin/demo-exporter
+
+COPY scripts /opt/bin/scripts
+
+CMD [&quot;/opt/bin/scripts/entrypoint.sh&quot;]
+</code></pre><p>entrypoint.sh</p>
+<pre><code>#!/bin/sh
+
+cd /opt
+mkdir -p log
+chmod 755 log
+bin/demo-exporter 2&gt;&gt;log/demo-exporter.log
+</code></pre><p>deployment</p>
+<pre><code>---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: demo-exporter
+  namespace: monitor
+  labels:
+    k8s-app: demo-exporter
+spec:
+  selector:
+    matchLabels:
+      k8s-app: demo-exporter
+  template:
+    metadata:
+      labels:
+        k8s-app: demo-exporter
+      annotations:
+        &quot;prometheus.io/scrape&quot;: &quot;true&quot;
+    spec:
+      containers:
+        - name: demo-exporter
+          image: demo-exporter
+          imagePullPolicy: Always
+          resources:
+            limits:
+              cpu: &quot;1&quot;
+              memory: &quot;500Mi&quot;
+            requests:
+              cpu: &quot;1&quot;
+              memory: &quot;200Mi&quot;
+          securityContext:
+            privileged: true
+          volumeMounts:
+          - mountPath: /opt/log
+            name: demo-exporter-log
+      volumes:
+        - hostPath:
+            path: /var/demo-exporter
+          name: demo-exporter-log
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    prometheus.io/scrape: &quot;true&quot;
+  labels:
+    k8s-app: demo-exporter
+  name: demo-exporter
+  namespace: monitor
+spec:
+  ports:
+  - name: http-metrics
+    port: 9006
+    protocol: TCP
+    targetPort: 9006
+  selector:
+    k8s-app: demo-exporter
+  type: ClusterIP
 </code></pre>
                                 
                                 </section>
@@ -616,12 +776,12 @@ main ${array[@]}
 
             
                 
-                <a href="../readme.md" class="navigation navigation-prev " aria-label="Previous page: Scripts">
+                <a href="../readme.md" class="navigation navigation-prev " aria-label="Previous page: Monitor">
                     <i class="fa fa-angle-left"></i>
                 </a>
                 
                 
-                <a href="date获取GMT时间差.html" class="navigation navigation-next " aria-label="Next page: date获取GMT时间差">
+                <a href="../PrometheusOperator的理解.md" class="navigation navigation-next " aria-label="Next page: Prometheus Operator的理解">
                     <i class="fa fa-angle-right"></i>
                 </a>
                 
@@ -632,7 +792,7 @@ main ${array[@]}
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"shell判断ssl证书过期时间","level":"2.1.3.1","depth":3,"next":{"title":"date获取GMT时间差","level":"2.1.3.2","depth":3,"path":"Scripts/date获取GMT时间差.md","ref":"Scripts/date获取GMT时间差.md","articles":[]},"previous":{"title":"Scripts","level":"2.1.3","depth":2,"path":"readme.md","ref":"readme.md","articles":[{"title":"shell判断ssl证书过期时间","level":"2.1.3.1","depth":3,"path":"Scripts/shell判断ssl证书过期时间.md","ref":"Scripts/shell判断ssl证书过期时间.md","articles":[]},{"title":"date获取GMT时间差","level":"2.1.3.2","depth":3,"path":"Scripts/date获取GMT时间差.md","ref":"Scripts/date获取GMT时间差.md","articles":[]}]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"Scripts/shell判断ssl证书过期时间.md","mtime":"2023-03-21T12:20:02.000Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2023-03-31T08:54:13.312Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"go exporter模板","level":"3.1.1.1","depth":3,"next":{"title":"Prometheus Operator的理解","level":"3.1.1.2","depth":3,"path":"PrometheusOperator的理解.md","ref":"PrometheusOperator的理解.md","articles":[]},"previous":{"title":"Monitor","level":"3.1.1","depth":2,"path":"readme.md","ref":"readme.md","articles":[{"title":"go exporter模板","level":"3.1.1.1","depth":3,"path":"Monitor/go-exporter模板.md","ref":"Monitor/go-exporter模板.md","articles":[]},{"title":"Prometheus Operator的理解","level":"3.1.1.2","depth":3,"path":"PrometheusOperator的理解.md","ref":"PrometheusOperator的理解.md","articles":[]}]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":[],"pluginsConfig":{"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"Monitor/go-exporter模板.md","mtime":"2023-03-21T12:17:14.000Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2023-03-31T08:54:13.312Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>
